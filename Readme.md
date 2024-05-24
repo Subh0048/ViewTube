@@ -34,4 +34,5 @@ favorite channels, and engage with other users through comments and likes.
 
 
 
-- [Model link](https://app.eraser.io/workspace/YtPqZ1VogxGy1jzIDkzj)
+- [Model link](https://github.com/Subh0048/ViewTube/assets/125295173/ddf5547f-3c0b-499c-96f0-cd19ef22cab8)
+
