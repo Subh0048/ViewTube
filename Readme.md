@@ -27,12 +27,11 @@ favorite channels, and engage with other users through comments and likes.
   
 - Other: React, Redux, JWT for authentication
 
-  ## Shcema design
+ ## Shcema design
 
-  
-  
+- [Databse Schema](https://app.eraser.io/workspace/mjchvDffi7IwjICTTfqQ)
 
+## License
+This project is licensed under the MIT License.
 
-
-- [Model link](https://github.com/Subh0048/ViewTube/assets/125295173/ddf5547f-3c0b-499c-96f0-cd19ef22cab8)
 
