@@ -1,5 +1,5 @@
 import dotenv from "dotenv"
-import app from "./app.js";
+import app from "./App.js";
 
 import DB_CONNECT from "./db/index.js";
 
