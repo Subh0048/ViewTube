@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 const userschema = new Schema(
   {
     username: {
-      Type: String,
+      type: String,
       required: true,
       unique: true,
       lowercase: true,
@@ -13,14 +13,14 @@ const userschema = new Schema(
       index: true,
     },
     email: {
-      Type: String,
+      type: String,
       required: true,
       unique: true,
       lowercase: true,
       trim: true,
     },
     fullname: {
-      Type: String,
+      type: String,
       required: true,
       index: true,
       trim: true,
@@ -53,7 +53,7 @@ const userschema = new Schema(
 
 userschema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
-  this.password = bcrypt.hash(this.password, 10);
+  this.password =  await bcrypt.hash(this.password, 10);
   next();
 });
 
@@ -73,25 +73,17 @@ userschema.methods.generateAccessToken = function () {
     {
       expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
     }
-  )
+  );
 };
 userschema.methods.generateRefreshToken = function () {
-    return jwt.sign(
-        {
-          id: this._id,
-          
-        },
-        process.env.REFRESH_TOKEN_SECRET,
-        {
-          expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
-        }
-      )
-
-
-
-
-
-
-
+  return jwt.sign(
+    {
+      id: this._id,
+    },
+    process.env.REFRESH_TOKEN_SECRET,
+    {
+      expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+    }
+  );
 };
 export const User = mongoose.model("User", userschema);
