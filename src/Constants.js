@@ -1,1 +1,1 @@
-export const DB_NAME = "vodeotube"
+export const DB_NAME="subhambackend".trim()

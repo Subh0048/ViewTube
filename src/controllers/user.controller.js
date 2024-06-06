@@ -6,35 +6,43 @@ import { ApiResponse } from "../util/APiresponse.js";
 
 const userregister = asynchandler(async (req, res) => {
   const { username, email, fullname, password } = req.body;
-  console.log("email", email);
+  // console.log("email", email);
 
   if (
-    [fullname, email, username, password].some((fields) => field?.trim() === "")
+    [username, email, fullname, password].some(
+      (fields) => fields?.trim() === ""
+    )
   ) {
     throw new ApiError(400, "please fill all field");
   }
 
-  const existingUser = User.findOne({
+  const existingUser = await User.findOne({
     $or: [{ email }, { username }],
   });
-  if (existinguser) {
-    throw ApiError(402, "user already exist");
+  if (existingUser) {
+    throw new ApiError(402, "user already exist");
   }
+  // console.log(req.files);
 
-  const avatarlocalpath = req.files?.avatar[0]?.path;
-  const coverImagelocalpath = req.files?.coverImage[0]?.path;
+  const avatarlocalpath = req.files?.avatar?.[0]?.path;
+  // const coverImagelocalpath = req.files?.coverImage?.[0]?.path;
+
+  let coverImageLocalPath;
+  if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+    coverImageLocalPath = req.files.coverImage[0].path
+}
 
   if (!avatarlocalpath) {
     throw new ApiError(403, "please upload avatar photo");
   }
 
   const avatar = await uploadoncloudinary(avatarlocalpath);
-  const coverImage = await uploadoncloudinary(coverImagelocalpath);
+  const coverImage = await uploadoncloudinary(coverImageLocalPath);
 
   if (!avatar) {
     throw new ApiError(403, "avatar not upload on cloudinary");
   }
-  User.create({
+  const user = await User.create({
     fullname,
     avatar: avatar.url,
     coverImage: coverImage?.url || "",
@@ -43,16 +51,22 @@ const userregister = asynchandler(async (req, res) => {
     username: username.toLowerCase(),
   });
 
-  const createdUser = User.findById(user._id).select("-password -refreshToken");
+  const createdUser = await User.findById(user._id).select(
+    "-password -refreshToken"
+  );
+
   if (!createdUser) {
     throw new ApiError(
       500,
       "something went wrong while register with the user "
     );
   }
-  return res
-    .status(201)
-    .json(ApiResponse(200, createdUser, "user register successfully"));
+
+  return res.status(201).json(
+    // """success":true,
+    // "message":"user registere successfully"
+    new ApiResponse(200, createdUser, "user register successfully")
+  );
 });
 
 export { userregister };
